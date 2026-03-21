@@ -64,55 +64,31 @@ toJson.addEventListener("click", async () => {
     2,
   );
 });
-// 1. Definim l'estat i el contenidor FORA per mantenir la memòria
-let isShiny = false;
-let pokemonCache = null; // Guardem les dades per no fer fetch cada vegada que canviem de color
 
 btnPokemon.addEventListener("click", async () => {
   const inputEl = document.getElementById("input");
   const outputEl = document.getElementById("output");
+  const imgContainer = document.getElementById("img-container");
   const name = inputEl.value.trim().toLowerCase();
 
-  if (!name) {
-    outputEl.value = "Si us plau, introdueix un nom de Pokémon.";
-    return;
-  }
+  if (!name) return;
 
   try {
-    if (!pokemonCache || pokemonCache.name !== name) {
-      const res = await fetch("/convertPokemon", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name }),
-      });
+    const res = await fetch("/convertPokemon", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name }),
+    });
 
-      const json = await res.json();
+    const json = await res.json();
+    const pokemon = json.result;
 
-      if (res.status !== 200) {
-        outputEl.value = "Pokémon no trobat.";
-        return;
-      }
+    imgContainer.innerHTML = `<img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">`;
 
-      pokemonCache =
-        typeof json.result === "string" ? JSON.parse(json.result) : json.result;
-    }
+    const abilities = pokemon.abilities.map(a => a.ability.name).join(", ");
+    outputEl.value = `NOM: ${pokemon.name.toUpperCase()}\nHABILITATS: ${abilities}`;
 
-    let img = document.getElementById("pokemon-img");
-    if (!img) {
-      img = document.createElement("img");
-      img.id = "pokemon-img";
-      document.querySelector(".container").appendChild(img);
-    }
-
-    img.src = isShiny
-      ? pokemonCache.sprites.front_shiny
-      : pokemonCache.sprites.front_default;
-
-    outputEl.value = `Mostrant ${pokemonCache.name.toUpperCase()} (${isShiny ? "Shiny" : "Normal"})`;
-
-    isShiny = !isShiny;
   } catch (error) {
-    console.error("Error:", error);
-    outputEl.value = "Error en la comunicació amb el servidor.";
+    outputEl.value = "Error cercant el Pokémon.";
   }
 });

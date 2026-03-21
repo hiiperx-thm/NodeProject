@@ -65,6 +65,26 @@ app.post("/convertPokemon", async (req, res) => {
   }
 });
 
+// Afegeix aquesta ruta al teu server.js
+app.post("/convertPokemonToXML", async (req, res) => {
+  try {
+    const { name } = req.body;
+    const cleanName = name ? name.trim().toLowerCase() : "";
+
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${cleanName}`);
+    if (!response.ok) throw new Error("Pokemon no trobat");
+
+    const pokemonData = await response.json();
+
+    const xmlResult = xml2json(JSON.stringify(pokemonData), { compact: true, spaces: 4 });
+
+    res.header('Content-Type', 'application/xml');
+    res.send(xmlResult);
+  } catch (e) {
+    res.status(404).send("<error>No s'ha trobat el Pokémon</error>");
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor a http://localhost:${PORT}`);
 });
