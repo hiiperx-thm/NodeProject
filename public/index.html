@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <title>NodeProject | LLM</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+    <span class="material-symbols-outlined">sunny</span>
+  </button>
+
+  <div class="container">
+    <header>
+      <h1>Node<span>Project</span></h1>
+    </header>
+
+    <div class="grid">
+      <textarea id="input" placeholder="Escriu XML, JSON o nom de Pokémon..."></textarea>
+      
+      <div class="actions">
+        <button id="btn">A MAJUSCULES</button>
+        <button id="btnToJSON">A JSON</button>
+        <button id="btnToXML">A XML</button>
+        <button id="btnPokemon" class="primary">Pokemon</button>
+      </div>
+
+      <textarea id="output" readonly placeholder="Resultat..."></textarea>
+      <div id="img-container"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    function toggleTheme() {
+      const body = document.body;
+      const btnIcon = document.querySelector("#themeBtn span");
+      body.classList.toggle("light-theme");
+      
+      if (body.classList.contains("light-theme")) {
+        btnIcon.textContent = "dark_mode";
+      } else {
+        btnIcon.textContent = "sunny";
+      }
+    }
+  </script>
+</body>
+</html>
