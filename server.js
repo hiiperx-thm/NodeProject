@@ -21,7 +21,7 @@ app.post("/convertToXML", (req, res) => {
 app.post("/convert", (req, res) => {
   try {
     const { data } = req.body;
-    const result = toXML(data);
+    const result = data.toUpperCase();
     res.json({ result });
   } catch (e) {
     res.status(400).json({ result: "Error convirtiendo a XML" });
